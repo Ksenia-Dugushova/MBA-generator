@@ -21,6 +21,7 @@ import sys
 sys.path.append("../tools")
 import traceback
 import z3
+import ast
 from mba_string_operation import verify_mba_unsat, truthtable_term_list, truthtable_expression, combine_term, variable_list
 
 
@@ -313,7 +314,30 @@ def complex_groundtruth(groundtruth, partterm=None):
 
     return complexExpre
 
+def generate_ast_from_expression(expression):
+    """Generate AST from a given MBA expression."""
+    return ast.parse(expression, mode='eval')
 
+#def generate_ast_for_sorted_dataset(file_path,  output_file_path):
+def generate_ast_for_sorted_dataset(file_path):
+    """Generate AST for each expression in the sorted dataset."""
+    #with open(file_path, 'r') as file, open(output_file_path, 'w') as output_file:
+    with open(file_path, 'r') as file:
+        ast_output_file_path = "../dataset/lMBA_{vnumber}variable.dataset_AST.txt".format(vnumber=vnumber)
+        open(ast_output_file_path, "w")
+        for line in file:
+            if line.startswith("#"):
+                continue
+            expression = line.strip()
+            ast_tree = generate_ast_from_expression(expression)
+            ast_output_file_path = "../dataset/lMBA_{vnumber}variable.dataset_AST.txt".format(vnumber=vnumber)
+             
+            with open(ast_output_file_path, "a") as output_file:
+                output_file.write(ast.dump(ast_tree) + '\n')
+            
+            print(ast.dump(ast_tree))  # пример вывода для демонстрации
+
+#def lMBA_sort_by_term(fileread=None, filewrite=None, ast_output_file=None):
 def lMBA_sort_by_term(fileread=None, filewrite=None):
     """sort the linear MBA expression.
     Args:
@@ -324,6 +348,9 @@ def lMBA_sort_by_term(fileread=None, filewrite=None):
         print("Please input the file storing MBA expression.")
     if not filewrite:
         print("Please input the file storing new MBA expression.")
+    #if not ast_output_file:
+     #   print("Please input the file to save the AST for each expression.")
+      #  return
     
     #get all expression
     expreList = []
@@ -362,7 +389,10 @@ def lMBA_sort_by_term(fileread=None, filewrite=None):
 
             print(MBAexpre, file=fw)
 
-    return None
+    #generate_ast_for_sorted_dataset(filewrite, ast_output_file)
+    generate_ast_for_sorted_dataset(filewrite)
+
+    #return None
 
 
 def unittest(vnumber, MBAnumber=100):
@@ -386,6 +416,11 @@ def unittest(vnumber, MBAnumber=100):
 
 def main(vnumber, MBAnumber=100):
     unittest(vnumber, MBAnumber)
+
+    #fileread = "../dataset/lMBA_{vnumber}variable.dataset.txt".format(vnumber=vnumber)
+    #filewrite = "../dataset/lMBA_{vnumber}variable.dataset.sorted.txt".format(vnumber=vnumber)
+    
+    #lMBA_sort_by_term(fileread, filewrite)
 
     return None
 
