@@ -335,8 +335,8 @@ def generate_ast_for_sorted_dataset(file_path):
             with open(ast_output_file_path, "a") as output_file:
                 output_file.write(ast.dump(ast_tree) + '\n')
             
-            print(ast.dump(ast_tree))  # пример вывода для демонстрации
-
+            print(ast.dump(ast_tree))
+ 
 #def lMBA_sort_by_term(fileread=None, filewrite=None, ast_output_file=None):
 def lMBA_sort_by_term(fileread=None, filewrite=None):
     """sort the linear MBA expression.
