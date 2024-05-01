@@ -70,6 +70,16 @@ def mba_obfuscator(sexpre, flag="l"):
             testall = False
 
     if testall:
+        pass
+        #pass verification.
+    else:
+        print("sorry, program output a wrong expression!")
+
+
+    return cexpre
+
+'''
+    if testall:
         
         # Разделение строки на отдельные выражения
         expressions = sexpre.split(" ")
@@ -89,6 +99,7 @@ def mba_obfuscator(sexpre, flag="l"):
 
     return cexpre
 
+'''
 
 
 
@@ -103,7 +114,7 @@ def unittest():
             f.write(f"{sexpre}, {mba_obfuscator(sexpre, 'np_recur')}\n")
             f.write(f"{sexpre}, {mba_obfuscator(sexpre, 'np_replace')}\n")
 
-
+'''
         # Чтение строк из файла
         with open('res_of_obf.txt', 'r') as file:
             expressions = file.readlines()
@@ -127,9 +138,8 @@ def unittest():
                 #print(ast.dump(ast_tree))
                 
 
-# Чтение содержимого файла res_AST.txt
-with open("res_AST.txt", "r") as file:
-    ast_strings = file.readlines()
+#we left the idea with AST
+#образуем AST 
 
 tmp = Expression(body=BinOp(left=BinOp(left=BinOp(left=BinOp(left=BinOp(left=BinOp(left=BinOp(left=BinOp(left=UnaryOp(op=USub(), operand=Constant(value=2)), op=Mult(), right=BinOp(left=BinOp(left=Constant(value=4), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=Name(id='y', ctx=Load()))), op=BitAnd(), right=BinOp(left=UnaryOp(op=UAdd(), operand=Constant(value=3)), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=UnaryOp(op=Invert(), operand=Name(id='y', ctx=Load())))))), op=Sub(), right=BinOp(left=Constant(value=1), op=Mult(), right=BinOp(left=BinOp(left=Constant(value=4), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=Name(id='y', ctx=Load()))), op=BitAnd(), right=UnaryOp(op=Invert(), operand=BinOp(left=UnaryOp(op=UAdd(), operand=Constant(value=3)), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=UnaryOp(op=Invert(), operand=Name(id='y', ctx=Load())))))))), op=Add(), right=BinOp(left=Constant(value=2), op=Mult(), right=BinOp(left=BinOp(left=Constant(value=4), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=Name(id='y', ctx=Load()))), op=BitXor(), right=BinOp(left=UnaryOp(op=UAdd(), operand=Constant(value=3)), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=UnaryOp(op=Invert(), operand=Name(id='y', ctx=Load()))))))), op=Add(), right=BinOp(left=Constant(value=4), op=Mult(), right=UnaryOp(op=Invert(), operand=BinOp(left=BinOp(left=Constant(value=4), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=Name(id='y', ctx=Load()))), op=BitAnd(), right=UnaryOp(op=Invert(), operand=BinOp(left=UnaryOp(op=UAdd(), operand=Constant(value=3)), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=UnaryOp(op=Invert(), operand=Name(id='y', ctx=Load()))))))))), op=Sub(), right=BinOp(left=Constant(value=4), op=Mult(), right=UnaryOp(op=Invert(), operand=BinOp(left=BinOp(left=Constant(value=4), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=Name(id='y', ctx=Load()))), op=BitOr(), right=BinOp(left=UnaryOp(op=UAdd(), operand=Constant(value=3)), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=UnaryOp(op=Invert(), operand=Name(id='y', ctx=Load())))))))), op=Sub(), right=BinOp(left=Constant(value=5), op=Mult(), right=UnaryOp(op=Invert(), operand=BinOp(left=BinOp(left=Constant(value=4), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=Name(id='y', ctx=Load()))), op=BitOr(), right=UnaryOp(op=Invert(), operand=BinOp(left=UnaryOp(op=UAdd(), operand=Constant(value=3)), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=UnaryOp(op=Invert(), operand=Name(id='y', ctx=Load()))))))))), op=Add(), right=BinOp(left=Constant(value=1), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitOr(), right=Name(id='y', ctx=Load())))), op=Sub(), right=BinOp(left=Constant(value=3), op=Mult(), right=Name(id='x', ctx=Load()))))
 def str_node(node):
@@ -151,7 +161,7 @@ def ast_visit(node, level=0):
             ast_visit(value, level=level+1)
 
 ast_visit(tmp)
-
+'''
 if __name__ == "__main__":
     unittest()
 #рабоотает
