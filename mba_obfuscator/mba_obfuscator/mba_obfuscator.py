@@ -9,7 +9,8 @@ sys.path.append("../tools")
 import z3
 import ast
 from ast import Expression
-from ast import BinOp, UnaryOp, Name, Constant, USub, Mult, Load, BitAnd, Sub, Add, BitXor, Invert, BitOr
+from ast import AST, parse, Expression, BinOp, Compare, BoolOp, Call,  Attribute,  Constant, Mult, BitAnd, Load, UnaryOp, Name, BitXor, Sub, BitOr, Invert, Add, USub, UAdd, iter_fields
+
 
 
 
@@ -19,102 +20,14 @@ from mba_string_operation import verify_mba_unsat
 from pMBA_generate import groundtruth_2_pmba
 from nonpMBA_generate import add_zero, recursively_apply, replace_sub_expre, replace_one_variable
 
-class BinOp:
-    def __init__(self, left, op, right):
-        self.left = left
-        self.op = op
-        self.right = right
 
-class UnaryOp:
-    def __init__(self, op, operand):
-        self.op = op
-        self.operand = operand
-
-class Constant:
-    def __init__(self, value):
-        self.value = value
-
-class Name:
-    def __init__(self, id, ctx):
-        self.id = id
-        self.ctx = ctx
-
-class Mult:
-    def __str__(self):
-        return "MUL"
-
-class Add:
-    def __str__(self):
-        return "ADD"
-
-class Sub:
-    def __str__(self):
-        return "SUB"
-
-class BitAnd:
-    def __str__(self):
-        return "AND"
-
-class BitOr:
-    def __str__(self):
-        return "OR"
-
-class BitXor:
-    def __str__(self):
-        return "XOR"
-
-class Invert:
-    def __str__(self):
-        return "NOT"
-
-def translate_to_asm(node):
-    # Функция для генерации ассемблерного кода из AST
-    if isinstance(node, BinOp):
-        left_asm = translate_to_asm(node.left)
-        right_asm = translate_to_asm(node.right)
-        op_asm = str(node.op)
-        if op_asm == "ADD":
-            return f"{right_asm}\npush rax\n{left_asm}\npop rbx\nadd rax, rbx"
-        elif op_asm == "SUB":
-            return f"{right_asm}\npush rax\n{left_asm}\npop rbx\nsub rax, rbx"
-        elif op_asm == "MUL":
-            return f"{right_asm}\npush rax\n{left_asm}\npop rbx\nimul rbx"
-        elif op_asm == "AND":
-            return f"{right_asm}\npush rax\n{left_asm}\npop rbx\nand rax, rbx"
-        elif op_asm == "OR":
-            return f"{right_asm}\npush rax\n{left_asm}\npop rbx\nor rax, rbx"
-        elif op_asm == "XOR":
-            return f"{right_asm}\npush rax\n{left_asm}\npop rbx\nxor rax, rbx"
-    elif isinstance(node, UnaryOp):
-        operand_asm = translate_to_asm(node.operand)
-        op_asm = str(node.op)
-        if op_asm == "NOT":
-            return f"{operand_asm}\nnot rax"
-    elif isinstance(node, Constant):
-        return f"mov rax, {node.value}"
-    elif isinstance(node, Name):
-        return f"mov rax, {node.id}"
 
 
 def generate_ast_from_expression(expression):
     """Generate AST from a given MBA expression."""
     return ast.parse(expression, mode='eval')
 
-def process_ast_file(input_file, output_file):
-    # Чтение AST из файла
-    with open(input_file, 'r') as f:
-        ast_strings = f.readlines()
 
-    # Открытие файла для записи ассемблерного кода
-    with open(output_file, 'w') as f:
-        # Обработка каждой строки AST
-        for ast_string in ast_strings:
-            # Преобразование строки AST в объект AST
-            ast_tree = ast.parse(ast_string)
-            # Генерация ассемблерного кода из AST
-            asm_code = translate_to_asm(ast_tree.body)
-            # Запись ассемблерного кода в файл
-            f.write(asm_code + '\n')
 
 def mba_obfuscator(sexpre, flag="l"):
     """MBA expression generation..
@@ -170,6 +83,7 @@ def mba_obfuscator(sexpre, flag="l"):
                 ast_file.write(ast.dump(ast_tree) + "\n")
 
 
+
     else:
         print("Sorry, the program output a wrong expression!")
 
@@ -211,12 +125,32 @@ def unittest():
 
                     
                 #print(ast.dump(ast_tree))
+                
 
-        process_ast_file('res_AST.txt', 'res_AST_assembl.txt')
+# Чтение содержимого файла res_AST.txt
+with open("res_AST.txt", "r") as file:
+    ast_strings = file.readlines()
 
+tmp = Expression(body=BinOp(left=BinOp(left=BinOp(left=BinOp(left=BinOp(left=BinOp(left=BinOp(left=BinOp(left=UnaryOp(op=USub(), operand=Constant(value=2)), op=Mult(), right=BinOp(left=BinOp(left=Constant(value=4), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=Name(id='y', ctx=Load()))), op=BitAnd(), right=BinOp(left=UnaryOp(op=UAdd(), operand=Constant(value=3)), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=UnaryOp(op=Invert(), operand=Name(id='y', ctx=Load())))))), op=Sub(), right=BinOp(left=Constant(value=1), op=Mult(), right=BinOp(left=BinOp(left=Constant(value=4), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=Name(id='y', ctx=Load()))), op=BitAnd(), right=UnaryOp(op=Invert(), operand=BinOp(left=UnaryOp(op=UAdd(), operand=Constant(value=3)), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=UnaryOp(op=Invert(), operand=Name(id='y', ctx=Load())))))))), op=Add(), right=BinOp(left=Constant(value=2), op=Mult(), right=BinOp(left=BinOp(left=Constant(value=4), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=Name(id='y', ctx=Load()))), op=BitXor(), right=BinOp(left=UnaryOp(op=UAdd(), operand=Constant(value=3)), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=UnaryOp(op=Invert(), operand=Name(id='y', ctx=Load()))))))), op=Add(), right=BinOp(left=Constant(value=4), op=Mult(), right=UnaryOp(op=Invert(), operand=BinOp(left=BinOp(left=Constant(value=4), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=Name(id='y', ctx=Load()))), op=BitAnd(), right=UnaryOp(op=Invert(), operand=BinOp(left=UnaryOp(op=UAdd(), operand=Constant(value=3)), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=UnaryOp(op=Invert(), operand=Name(id='y', ctx=Load()))))))))), op=Sub(), right=BinOp(left=Constant(value=4), op=Mult(), right=UnaryOp(op=Invert(), operand=BinOp(left=BinOp(left=Constant(value=4), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=Name(id='y', ctx=Load()))), op=BitOr(), right=BinOp(left=UnaryOp(op=UAdd(), operand=Constant(value=3)), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=UnaryOp(op=Invert(), operand=Name(id='y', ctx=Load())))))))), op=Sub(), right=BinOp(left=Constant(value=5), op=Mult(), right=UnaryOp(op=Invert(), operand=BinOp(left=BinOp(left=Constant(value=4), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=Name(id='y', ctx=Load()))), op=BitOr(), right=UnaryOp(op=Invert(), operand=BinOp(left=UnaryOp(op=UAdd(), operand=Constant(value=3)), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitAnd(), right=UnaryOp(op=Invert(), operand=Name(id='y', ctx=Load()))))))))), op=Add(), right=BinOp(left=Constant(value=1), op=Mult(), right=BinOp(left=Name(id='x', ctx=Load()), op=BitOr(), right=Name(id='y', ctx=Load())))), op=Sub(), right=BinOp(left=Constant(value=3), op=Mult(), right=Name(id='x', ctx=Load()))))
+def str_node(node):
+    if isinstance(node, AST):
+        fields = [(name, str_node(val)) for name, val in iter_fields(node) if name not in ('left', 'right')]
+        rv = '%s(%s' % (node.__class__.__name__, ', '.join('%s=%s' % field for field in fields))
+        return rv + ')'
+    else:
+        return repr(node)
 
+def ast_visit(node, level=0):
+    print('  ' * level + str_node(node))
+    for field, value in iter_fields(node):
+        if isinstance(value, list):
+            for item in value:
+                if isinstance(item, AST):
+                    ast_visit(item, level=level+1)
+        elif isinstance(value, AST):
+            ast_visit(value, level=level+1)
 
-
+ast_visit(tmp)
 
 if __name__ == "__main__":
     unittest()
