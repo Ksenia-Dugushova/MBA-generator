@@ -12,9 +12,6 @@ from ast import Expression
 from ast import AST, parse, Expression, BinOp, Compare, BoolOp, Call,  Attribute,  Constant, Mult, BitAnd, Load, UnaryOp, Name, BitXor, Sub, BitOr, Invert, Add, USub, UAdd, iter_fields
 
 
-
-
-
 from lMBA_generate import complex_groundtruth
 from mba_string_operation import verify_mba_unsat
 from pMBA_generate import groundtruth_2_pmba
@@ -114,6 +111,27 @@ def unittest():
             f.write(f"{sexpre}, {mba_obfuscator(sexpre, 'np_recur')}\n")
             f.write(f"{sexpre}, {mba_obfuscator(sexpre, 'np_replace')}\n")
 
+        # Открываем файл с результатами обфускации
+        with open("res_of_obf.txt", "r") as f:
+            # Читаем каждую строку
+            for i, line in enumerate(f, start=1):
+                # Разделяем строку на два выражения
+                expression, obfuscated_result = line.strip().split(", ")
+                with open(f"res{i}_in_progr.c", "w") as output_file:
+                    output_file.write('''#include <stdio.h>
+
+        int main() {
+            int x; 
+            int y;  
+
+            int result = ''')
+                    # Записываем обфусцированный результат
+                    output_file.write(obfuscated_result)
+                    output_file.write(';\n\n')
+                    output_file.write('''    printf("Result: %d\\n", result);
+
+            return 0;
+        }''')
 '''
         # Чтение строк из файла
         with open('res_of_obf.txt', 'r') as file:
