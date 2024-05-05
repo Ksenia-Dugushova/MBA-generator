@@ -285,7 +285,7 @@ def complex_groundtruth_handle(groundtruth, vnumber, partterm=None):
     complexExpre = combine_term(complexExpre)
 
     return complexExpre
-
+    
 
 
 def complex_groundtruth(groundtruth, partterm=None):
@@ -335,7 +335,7 @@ def generate_ast_for_sorted_dataset(file_path):
             with open(ast_output_file_path, "a") as output_file:
                 output_file.write(ast.dump(ast_tree) + '\n')
             
-            print(ast.dump(ast_tree))
+           # print(ast.dump(ast_tree))
  
 #def lMBA_sort_by_term(fileread=None, filewrite=None, ast_output_file=None):
 def lMBA_sort_by_term(fileread=None, filewrite=None):
@@ -416,12 +416,15 @@ def unittest(vnumber, MBAnumber=100):
 
 def main(vnumber, MBAnumber=100):
     unittest(vnumber, MBAnumber)
-
+    #lmbaObj = LinearMBAGenerator(vnumber)
+    #lmbaObj.generate_lmba_dataset(MBAnumber)
     #fileread = "../dataset/lMBA_{vnumber}variable.dataset.txt".format(vnumber=vnumber)
     #filewrite = "../dataset/lMBA_{vnumber}variable.dataset.sorted.txt".format(vnumber=vnumber)
     
     #lMBA_sort_by_term(fileread, filewrite)
 
+    #print("standardBitList:", lmbaObj.standardBitList)
+    #print("nonstandardBitList:", lmbaObj.nonstandardBitList)
     return None
 
 
@@ -432,6 +435,7 @@ if __name__ == "__main__":
         main(vnumber, MBAnumber)
     else:
         main(vnumber)
+
 
 
 
