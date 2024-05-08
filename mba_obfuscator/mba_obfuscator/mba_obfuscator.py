@@ -19,7 +19,6 @@ from nonpMBA_generate import add_zero, recursively_apply, replace_sub_expre, rep
 
 
 
-
 def generate_ast_from_expression(expression):
     """Generate AST from a given MBA expression."""
     return ast.parse(expression, mode='eval')
@@ -104,13 +103,8 @@ def unittest():
 
 
         with open("res_of_obf.txt", "w") as f:
-            f.write(f"{sexpre}, {mba_obfuscator(sexpre, 'l')}\n")
-            f.write(f"{sexpre}, {mba_obfuscator(sexpre, 'l')}\n")
-            f.write(f"{sexpre}, {mba_obfuscator(sexpre, 'l')}\n")
-            #f.write(f"{sexpre}, {mba_obfuscator(sexpre, 'p')}\n")
-            #f.write(f"{sexpre}, {mba_obfuscator(sexpre, 'np_zero')}\n")
-            #f.write(f"{sexpre}, {mba_obfuscator(sexpre, 'np_recur')}\n")
-            #f.write(f"{sexpre}, {mba_obfuscator(sexpre, 'np_replace')}\n")
+            for _ in range(3):
+                f.write(f"{sexpre}, {mba_obfuscator(sexpre, 'l')}\n")
 
         # Открываем файл с результатами обфускации
         with open("res_of_obf.txt", "r") as f:
